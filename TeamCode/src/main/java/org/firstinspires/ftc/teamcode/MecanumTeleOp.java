@@ -22,7 +22,11 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
     //Defining variables
-    int reaperPos = 1;
+    //reaperPos is the position that the reaper will be in.
+    int reaperPos;
+    double stow = 0.7;
+    double stack = 0.3;
+    double ground = .15;
 
     public void runOpMode() {
 
@@ -72,8 +76,12 @@ public class MecanumTeleOp extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
 
             //This is setting the intake power when a bumper is pressed.
-            if (gamepad1.right_bumper) intake.setPower(.8);
-            else if (gamepad1.left_bumper) intake.setPower(-0.8);
+            if (gamepad1.right_bumper) {
+                intake.setPower(.8);
+            }
+            else if (gamepad1.left_bumper) {
+                intake.setPower(-0.8);
+            }
             else intake.setPower(0);
 
             //This means that, whenever the intake is active, the hood will be down.
@@ -83,18 +91,19 @@ public class MecanumTeleOp extends LinearOpMode {
             else Hood.setPosition(.4325);
 
             //This is a rising edge detector. It cycles between 3 states when a is pressed, adding one to reaperPos after each press. When reaperPos is above 3, it gets set back to 1.
+            //This code is changing what position the reaper is at based on what value reaperPos has.
             if (currentGamepad1.a && !previousGamepad1.a) {
                 reaperPos++;
             }
-                if (reaperPos > 3) {
-                    reaperPos = 1;
+                if (reaperPos > 2) {
+                    reaperPos = 0;
                 }
-                if (reaperPos == 1) {
-                    Reaper.setPosition(0.7);
-                } else if (reaperPos == 2) {
-                    Reaper.setPosition(0.3);
+                if (reaperPos == 0) {
+                    Reaper.setPosition(stow);
+                } else if (reaperPos == 1) {
+                    Reaper.setPosition(stack);
                 } else {
-                    Reaper.setPosition(0.15);
+                    Reaper.setPosition(ground);
                 }
             }
         }
